@@ -22,35 +22,6 @@ void displayMatrix(char s1[], char s2[], int s1Len, int s2Len, int** matrix)
     }
 }
 
-void displayLCS(char s1[], int s1Len, int s2Len, int** matrix)
-{
-    int largestNum = 0;
-    int largestNumI = 0;
-    int largestNumJ = 0;
-
-    for (int i = 0; i < s2Len; i++)
-    {
-        for (int j = 0; j < s1Len; j++)
-        {
-            if (matrix[i][j] > largestNum)
-            {
-                largestNum = matrix[i][j];
-                largestNumI = i;
-                largestNumJ = j;
-            }
-        }
-    }
-
-    //Print out LCS
-    std::cout << "\nLongest Common String: ";
-    for (int i = 0; i < largestNum; i++)
-    {
-        std::cout << s1[(largestNumJ - (largestNum - 1)) + i];
-    }
-    std::cout << "\n\n";
-}
-
-
 int main()
 {
     //Input Strings and initialize matrix
@@ -65,21 +36,15 @@ int main()
         matrix[j] = new int[string1Len];
     }
 
+    //Populate the matrix using comparisons, gain necessary info to display LCS
+    int largestNum = 0;
+    int largestNumJ = 0;
+
     for (int i = 0; i < string2Len; i++)
     {
         for (int j = 0; j < string1Len; j++)
         {
-            matrix[i][j] = -1;
-        }
-    }
-
-
-    //Populate the matrix using comparisons
-    for (int i = 0; i < string2Len; i++)
-    {
-        for (int j = 0; j < string1Len; j++)
-        {
-            if (string2[i] == string1[j] && matrix[i][j]<0)
+            if (string2[i] == string1[j])
             {
                 if (i == 0 || j == 0)
                     matrix[i][j] = 1;
@@ -88,11 +53,23 @@ int main()
             }
             else
                 matrix[i][j] = 0;
+
+            if (matrix[i][j] > largestNum)
+            {
+                largestNum = matrix[i][j];
+                largestNumJ = j;
+            }
         }
     }
 
     //Display findings
     displayMatrix(string1, string2, string1Len, string2Len, matrix);
-    displayLCS(string1, string1Len, string2Len, matrix);
+
+    std::cout << "\nLongest Common String: ";
+    for (int i = 0; i < largestNum; i++)
+    {
+        std::cout << string1[(largestNumJ - (largestNum - 1)) + i];
+    }
+    std::cout << "\n\n";
 
 }
